@@ -1,0 +1,19 @@
+.container__editor {
+  font-size: 12px;
+  font-variant-ligatures: common-ligatures;
+  border-radius: 3px;
+}
+
+.container__editor textarea {
+  outline: 0;
+}
+.fieldset {
+  border-color: rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+}
+.container__area {
+  height: 300px;
+  overflow: auto;
+}
