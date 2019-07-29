@@ -1,68 +1,44 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h3 align="center">Matters2ipfs</h3>
 
-## Available Scripts
+<div align="center">
 
-In the project directory, you can run:
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![GitHub Issues](https://img.shields.io/github/issues/contributionls/matters2ipfs.svg)](https://github.com/contributionls/matters2ipfs/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/contributionls/matters2ipfs.svg)](https://github.com/contributionls/matters2ipfs/pulls)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
-### `npm start`
+</div>
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+In order to  visit https://matters.news in the great firewall of China, the tool converts [matters](https://matters.news) URL to [ipfs](https://ipfs.io/) URL.
 
-### `npm test`
+Convert online: <https://matters2ipfs.js.org>
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📝 Table of Contents
 
-### `npm run build`
+- [Getting Started](#getting_started)
+- [Deployment](#deployment)
+- [Usage](#usage)
+- [Built Using](#built_using)
+- [TODO](TODO.md)
+- [Contributing](CONTRIBUTING.md)
+- [Authors](#authors)
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🏁 Getting Started <a name = "getting_started"></a>
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+1. Open <https://matters2ipfs.js.org> in your browser.
+2. Input Matters article URL, like: `https://matters.news/@az/49%E5%A4%A9-%E9%A6%99%E6%B8%AF%E5%8F%8D%E9%80%81%E4%B8%AD%E9%81%8B%E5%8B%95%E5%A6%82%E4%BD%95%E4%BE%86%E5%88%B0%E8%87%A8%E7%95%8C%E9%BB%9E-zdpuB2ZHV88bmbfSc6eK8MLBppUC31RwxVLDZbLpt2QMhwZKT`
+3. Click `Convert` Button
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## ⛏️ Built Using <a name = "built_using"></a>
 
-### `npm run eject`
+- [Docker](https://www.docker.com/) - Development Environment And Production Enviroment
+- [NodeJs](https://nodejs.org/en/) - Server Environment
+- [Create React App](https://github.com/facebook/create-react-app) - Web Framework
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## ✍️ Authors <a name = "authors"></a>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- [@contributionls](https://github.com/contributionls) - Idea & Work
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+See also the list of [contributors](https://github.com/contributionls/matters2ipfs/contributors) who participated in this project.

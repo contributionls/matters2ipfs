@@ -21,6 +21,8 @@ build:
 	docker build -f DEV.Dockerfile -t ${CLIENT_DEV_LATEST} . && Docker run -v `pwd`/build:/app/build ${CLIENT_DEV_LATEST} yarn build
 deploy:
 	make build && ./scripts/deploy.sh
+test:
+	docker build -f DEV.Dockerfile -t ${CLIENT_DEV_LATEST} . && Docker run ${CLIENT_DEV_LATEST} yarn test:ci
 client:
 	docker-compose -f ./docker-compose.development.yml exec client /bin/sh
 logs:
