@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   TextField,
@@ -16,6 +16,7 @@ import {
   ListItemSecondaryAction,
   Avatar,
   ListItemIcon,
+  ListSubheader,
   ListItemAvatar,
   CircularProgress,
   IconButton,
@@ -25,11 +26,17 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { FileFind,CheckCircle, ContentCopy,Delete as DeleteIcon,Folder as FolderIcon } from "mdi-material-ui";
-import {HighlightOff,ImportExport} from '@material-ui/icons'
-import { getExtname, api, isValidUrl } from "./utils";
+import {
+  FileFind,
+  CheckCircle,
+  ContentCopy,
+  Delete as DeleteIcon,
+  Folder as FolderIcon
+} from "mdi-material-ui";
+import { HighlightOff, ImportExport, AccessTime } from "@material-ui/icons";
+import { getExtname, api, isValidUrl, getHash, getMattersHash } from "./utils";
 import SnackBarContentWrapper from "./components/SnackBarContent";
-
+import gateways from "./public-gateway";
 import "./Home.css";
 const HOST = process.env.REACT_APP_API_HOST
   ? process.env.REACT_APP_API_HOST
@@ -61,8 +68,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(4),
     minWidth: 120
   },
-  listItem:{
-    wordBreak:'break-all'
+  listItem: {
+    wordBreak: "break-all"
   },
   buttonSplit: {
     flex: 1
@@ -97,32 +104,138 @@ const useStyles = makeStyles(theme => ({
   priButton: {
     justifyContent: "flex-end"
   },
-  center:{
-    display:'flex',
+  center: {
+    display: "flex",
     justifyContent: "center",
-    alignItems:"center"
+    alignItems: "center"
   },
-  centerButton:{
-    marginTop:theme.spacing(4),
+  centerButton: {
+    marginTop: theme.spacing(4),
     justifyContent: "center"
-
+  },
+  overAvatar: {
+    minWidth: 0,
+    paddingRight: theme.spacing(1)
   }
 }));
 
 export default function Home() {
   const classes = useStyles();
+  const corsApi = "";
   const [isLoading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
+  const [mediaHash, setMediaHash] = useState("");
+  const [hash, setHash] = useState(
+    ""
+  );
+  const [checkedStat, setCheckedStat] = useState({
+    count: 0,
+    checkedCount: 0,
+    onlineCount: 0,
+    offlineCount: 0
+  });
+  const [checkedMap, setCheckedMap] = useState({});
   const getUrlError = url => {
     return !isValidUrl(url);
   };
   const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
-
+  const [isInit, setIsInit] = useState(false);
   const [urlError, setUrlError] = useState(getUrlError(url));
-  const [errorMessage, setErrorMessage] = useState("test");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleChangeHash = currentHash => {
+    // checkedMap
+    if (currentHash) {
+      // if hash exist
+      const currentCheckedMap = {};
+      for (let i = 0; i < gateways.length; i++) {
+        const gateway = gateways[i];
+        const gatewayAndHash = gateway.replace(":hash", currentHash);
+        // opt-out from gateway redirects done by browser extension
+        const corsHost = corsApi;
+        const displayUrl = corsHost + gatewayAndHash;
+        const requestUrl = displayUrl + "#x-ipfs-companion-no-redirect";
+        currentCheckedMap[displayUrl] = {
+          displayUrl: displayUrl,
+          requestUrl: requestUrl,
+          status: "checking"
+        };
+      }
+      setCheckedMap(currentCheckedMap);
+      const keys = Object.keys(currentCheckedMap);
+      setCheckedStat({
+        count: keys.length,
+        checkedCount: 0,
+        onlineCount: 0,
+        offlineCount: 0
+      });
+      setTimeout(()=>{
+        keys.forEach(key => {
+          const item = currentCheckedMap[key];
+          const start = Date.now()
+          api(item.requestUrl)
+            .then(data => {
+              // console.log('data',data);
+              const end = Date.now()
+              const spend = end - start;
+              setCheckedStat(prevCheckedStat => {
+                const currentCheckedStat = Object.assign({}, prevCheckedStat);
+                currentCheckedStat.checkedCount++;
+                currentCheckedStat.onlineCount++;
+                return currentCheckedStat;
+              });
+              setCheckedMap(prevCheckedMap => {
+                const checkedMapState = Object.assign({}, prevCheckedMap);
+                if (checkedMapState[key]) {
+                  checkedMapState[key].status = "online";
+                  checkedMapState[key].timeout = spend;
+                }
+                return checkedMapState;
+              });
+            })
+            .catch(e => {
+              console.log("e", e);
+              setCheckedStat(prevCheckedStat => {
+                const currentCheckedStat = Object.assign({}, prevCheckedStat);
+                currentCheckedStat.checkedCount++;
+                currentCheckedStat.offlineCount++;
+                return currentCheckedStat;
+              });
+              setCheckedMap(prevCheckedMap => {
+                const checkedMapState = Object.assign({}, prevCheckedMap);
+                if (checkedMapState[key]) {
+                  checkedMapState[key].status = "offline";
+                  checkedMapState[key].error = e.message || "Timeout!";
+                }
+                return checkedMapState;
+              });
+            });
+        });
+      },1)
+
+    }
+  };
+  useEffect(() => {
+    if (!isInit) {
+      console.log("init");
+      setIsInit(true);
+      // handleChangeHash(hash);
+    } else {
+    }
+  });
+
   const handleChangeUrl = e => {
-    setUrl(e.target.value);
+    const currentUrl = e.target.value;
+    const isUrlError = getUrlError(currentUrl);
+    setUrl(currentUrl);
+    setUrlError(isUrlError);
+    if (isUrlError) {
+      setMediaHash("");
+    } else {
+      const currentHash = getHash(currentUrl);
+      setMediaHash(currentHash);
+    }
   };
   function handleClose(event, reason) {
     if (reason === "clickaway") {
@@ -137,12 +250,61 @@ export default function Home() {
     }
     setOpenError(false);
   }
-  const handleConvert = () => {};
+  function getResults() {
+    const keys = Object.keys(checkedMap);
+    const results = keys.map(key => {
+      return checkedMap[key];
+    });
+    return results;
+  }
+
+  const handleConvert = async () => {
+    if (!mediaHash) {
+      setErrorMessage(`Please input a valid matters article url`);
+      setOpenError(true);
+      return;
+    }
+    // setloading
+    setLoading(true);
+    setCheckedMap({});
+    // get hash
+    try {
+      const mattersResult = await getMattersHash({
+        mediaHash: mediaHash
+      });
+      if (
+        mattersResult &&
+        mattersResult.article &&
+        mattersResult.article.dataHash
+      ) {
+        const { dataHash } = mattersResult.article;
+        setHash(dataHash);
+        handleChangeHash(dataHash);
+      } else {
+        setErrorMessage(
+          `Can't get the matters dataHash, this may cause by our convert server error`
+        );
+        setOpenError(true);
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+      setOpenError(true);
+    }
+    setLoading(false);
+  };
+
   const handleClickRandom = () => {
     const newUrl =
       "https://matters.news/@leungkaichihk/%E9%A6%99%E6%B8%AF%E7%AC%AC%E4%B8%80%E8%AA%B2-%E7%B0%A1%E4%BB%8B%E5%8F%8A%E7%9B%AE%E9%8C%84-zdpuB2J818r8yUSDeZ4vDARrnQ4ut3S2UYjALXHJ16jp25w4P";
 
-    setUrl(newUrl);
+    handleChangeUrl({
+      target: {
+        value: newUrl
+      }
+    });
+  };
+  const handleClickCopy = () => {
+    setOpen(true);
   };
   return (
     <div className={classes.root}>
@@ -181,8 +343,8 @@ export default function Home() {
           required
           label={`Matters Article Url`}
           type="url"
-          placeholder="Please input your config url here"
-          onChange={handleChangeUrl.bind(null)}
+          placeholder="https://matters.news/@leungkaichihk/%E9%A6%99%E6%B8%AF%E7%AC%AC%E4%B8%80%E8%AA%B2-%E7%B0%A1%E4%BB%8B%E5%8F%8A%E7%9B%AE%E9%8C%84-zdpuB2J818r8yUSDeZ4vDARrnQ4ut3S2UYjALXHJ16jp25w4P"
+          onChange={handleChangeUrl}
           value={url}
           variant="outlined"
           margin="normal"
@@ -191,7 +353,7 @@ export default function Home() {
         />
         <FormGroup row className={classes.centerButton}>
           <Button
-            onClick={handleConvert.bind(null)}
+            onClick={handleConvert}
             color="primary"
             size="large"
             variant="outlined"
@@ -204,42 +366,91 @@ export default function Home() {
                 color="inherit"
                 className={classes.buttonIcon}
               />
-            ) : null}
-            <ImportExport fontSize="small" className={classes.buttonIcon} />
+            ) : (
+              <ImportExport fontSize="small" className={classes.buttonIcon} />
+            )}
             Convert
           </Button>
           <Button
-          onClick={handleClickRandom}
-          variant="outlined"
-          color="default"
-          size="large"
-          className={`${classes.button} ${classes.buttonRight}`}
-        >
-          Example
-        </Button>
+            onClick={handleClickRandom}
+            variant="outlined"
+            color="default"
+            size="large"
+            className={`${classes.button} ${classes.buttonRight}`}
+          >
+            Example
+          </Button>
         </FormGroup>
-        <Divider className={classes.divider} />
-        <div>
-          <List dense={false}>
-            <ListItem>
-              <ListItemAvatar className={classes.center}>
-                  <HighlightOff color="error"></HighlightOff>
-              </ListItemAvatar>
-              <ListItemText
-              primaryTypographyProps={{
-                className:classes.listItem
-              }}
-                primary="https://d26g9c7mfuzstv.cloudfront.net/ipfs/QmTgP4LgbnhWc6etMzbbqJq5ayRxk1AEpB9Nq3yEcdBgQG/"
-              />
-              <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="delete">
-                  <ContentCopy />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
-      
-          </List>
-        </div>
+        {hash ? (
+          <div>
+            <Divider className={classes.divider} />
+            <List
+              aria-labelledby="nested-list-subheader"
+              subheader={
+                <ListSubheader component="div" id="nested-list-subheader">
+                  {checkedStat.checkedCount}/{checkedStat.count} gateways,{" "}
+                  {checkedStat.onlineCount} are online,{" "}
+                  {checkedStat.offlineCount} are offline
+                </ListSubheader>
+              }
+              dense={false}
+            >
+              {getResults().map((item, index) => {
+                return (
+                  <ListItem key={`key_${index}`}>
+                    <ListItemAvatar
+                      className={`${classes.center} ${classes.overAvatar}`}
+                    >
+                      <div>
+                        {item.status === "init" ? (
+                          <AccessTime color="disabled" />
+                        ) : null}
+                        {item.status === "checking" ? (
+                          <CircularProgress
+                            size={20}
+                            color="secondary"
+                            className={classes.buttonIcon}
+                          />
+                        ) : null}
+                        {item.status === "offline" ? (
+                          <HighlightOff color="error" />
+                        ) : null}
+                        {item.status === "online" ? (
+                          <CheckCircle color="primary" />
+                        ) : null}
+                      </div>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primaryTypographyProps={{
+                        className: classes.listItem
+                      }}
+                      primary={
+                        <Link
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={item.displayUrl}
+                        >
+                          {item.displayUrl}
+                        </Link>
+                      }
+                      secondary={item.status === "offline" ? item.error :(item.status === "online"?`${item.timeout}ms`:null) }
+                    />
+                    <ListItemSecondaryAction>
+                      <CopyToClipboard
+                        text={item.displayUrl}
+                        onCopy={handleClickCopy}
+                      >
+                        <IconButton edge="end" aria-label="copy">
+                          <ContentCopy />
+                        </IconButton>
+                      </CopyToClipboard>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </div>
+        ) : null}
       </FormGroup>
       <Snackbar
         anchorOrigin={{
@@ -262,7 +473,7 @@ export default function Home() {
           horizontal: "left"
         }}
         open={openError}
-        autoHideDuration={1500}
+        autoHideDuration={2500}
         onClose={handleCloseError}
       >
         <SnackBarContentWrapper

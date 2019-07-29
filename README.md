@@ -1,4 +1,4 @@
-<h3 align="center">Matters2ipfs</h3>
+<h3 align="center">Matters2IPFS</h3>
 
 <div align="center">
 
@@ -18,8 +18,7 @@ Convert online: <https://matters2ipfs.js.org>
 ## 📝 Table of Contents
 
 - [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
+- [Submit New Public Gateway](#submit)
 - [Built Using](#built_using)
 - [TODO](TODO.md)
 - [Contributing](CONTRIBUTING.md)
@@ -28,8 +27,13 @@ Convert online: <https://matters2ipfs.js.org>
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
 1. Open <https://matters2ipfs.js.org> in your browser.
-2. Input Matters article URL, like: `https://matters.news/@az/49%E5%A4%A9-%E9%A6%99%E6%B8%AF%E5%8F%8D%E9%80%81%E4%B8%AD%E9%81%8B%E5%8B%95%E5%A6%82%E4%BD%95%E4%BE%86%E5%88%B0%E8%87%A8%E7%95%8C%E9%BB%9E-zdpuB2ZHV88bmbfSc6eK8MLBppUC31RwxVLDZbLpt2QMhwZKT`
-3. Click `Convert` Button
+2. Input Matters article URL, like: <https://matters.news/@leungkaichihk/%E9%A6%99%E6%B8%AF%E7%AC%AC%E4%B8%80%E8%AA%B2-%E7%B0%A1%E4%BB%8B%E5%8F%8A%E7%9B%AE%E9%8C%84-zdpuB2J818r8yUSDeZ4vDARrnQ4ut3S2UYjALXHJ16jp25w4P>
+3. Click `Convert` Button(**Note: The checked result is base on your local network, so if you use a proxy,the result is based on your proxy.**)
+4. Click `Copy` Icon which is online
+
+## ➕ Submit New Public Gateway <a name = "submit"></a>
+
+If you want submit a new public gateway, you can create a  [new issue](https://github.com/contributionls/matters2ipfs/issues/new) or [new pull request](https://github.com/contributionls/matters2ipfs/pulls). Here is the [public gateways config file](https://github.com/contributionls/matters2ipfs/blob/master/src/public-gateway.js)
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
