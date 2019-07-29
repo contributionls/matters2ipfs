@@ -1,4 +1,4 @@
-.PHONY: start build stop test deploy logs client build-dev
+.PHONY: start build stop test deploy logs client build-docker
 
 CLIENT_NAME   := contributionls/matters2ipfs
 CLIENT_DEV_NAME   := contributionls/matters2ipfs-dev
@@ -13,14 +13,14 @@ start:
 	docker-compose -f ./docker-compose.development.yml up
 start-with-build:
 	docker-compose -f ./docker-compose.development.yml up --build
-build:
+build-docker:
 	docker build -t ${CLIENT_LATEST} .
 stop:
 	docker-compose -f ./docker-compose.development.yml stop
-build-dev:
-	docker build -f DEV.Dockerfile -t ${CLIENT_DEV_LATEST} .
+build:
+	docker build -f DEV.Dockerfile -t ${CLIENT_DEV_LATEST} . && Docker run -v `pwd`/build:/app/build ${CLIENT_DEV_LATEST} yarn build
 deploy:
-	make build-dev && Docker run ${CLIENT_DEV_LATEST} yarn deploy
+	make build && ./scripts/deploy.sh
 client:
 	docker-compose -f ./docker-compose.development.yml exec client /bin/sh
 logs:
