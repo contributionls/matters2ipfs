@@ -26,6 +26,9 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 cd $SCRIPTPATH
 cd ../build
 rm -rf .git/
+git clone --branch gh-pages --depth 1 https://github.com/contributionls/matters2ipfs.git temp
+cp -r ./temp/static ./
+rm -rf ./temp
 cp ../CNAME CNAME
 git init
 git remote add origin $GITURL

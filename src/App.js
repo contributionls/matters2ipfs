@@ -52,7 +52,7 @@ export default function ButtonAppBar() {
             </Link>
             <Link color="inherit" href="/">
               <Typography variant="h6" className={classes.title}>
-                Convert config online
+                Matters2ipfs Online
               </Typography>
             </Link>
             <div className={classes.grow} />

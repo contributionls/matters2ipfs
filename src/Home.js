@@ -202,7 +202,7 @@ export default function Home() {
   };
   const handleClickRandom = () => {
     const newUrl =
-      "https://gist.githubusercontent.com/contributionls/6ab023e9d4c1e17fc3dc13220812ca6f/raw/a.yaml";
+      "https://matters.news";
 
     setUrl(newUrl);
     const autoFileType = getAutoFileType(newUrl);
