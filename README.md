@@ -11,7 +11,7 @@
 
 ---
 
-In order to  visit https://matters.news in the great firewall of China, the tool converts [matters](https://matters.news) URL to [ipfs](https://ipfs.io/) URL.
+The tool converts [matters](https://matters.news) URL to [ipfs](https://ipfs.io/) URL.
 
 Convert online: <https://matters2ipfs.js.org>
 

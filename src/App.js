@@ -14,7 +14,10 @@ import { GithubCircle } from "mdi-material-ui";
 import Home from "./Home";
 const useStyles = makeStyles(theme => ({
   root: {
+    display: 'flex',
+    flexDirection: 'column',
     flexGrow: 1,
+    minHeight:"100vh",
     backgroundColor: theme.palette.background.paper
   },
   grow: {
@@ -28,7 +31,16 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     flexGrow: 1
-  }
+  },
+  footer: {
+    padding: theme.spacing(1),
+    marginTop: 'auto',
+    backgroundColor: 'white',
+    backgroundColor: "#f2f2f2",
+    borderTop: "1px solid #e4e4e4",
+    lineHeight: 40
+  },
+
 }));
 
 export default function ButtonAppBar() {
@@ -38,40 +50,16 @@ export default function ButtonAppBar() {
     <React.Fragment>
       <CssBaseline />
       <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <Link color="inherit" href="/">
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="Menu"
-              >
-                <ImportExport />
-              </IconButton>
-            </Link>
-            <Link color="inherit" href="/">
-              <Typography variant="h6" className={classes.title}>
-                Matters2ipfs Online
-              </Typography>
-            </Link>
-            <div className={classes.grow} />
-            <Link
-              href="https://github.com/contributionls/utils"
-              target="_blank"
-              rel="noopener noreferrer"
-              color="inherit"
-              className={classes.link}
-            >
-              <IconButton color="inherit" aria-label="Github">
-                <GithubCircle />
-              </IconButton>
-            </Link>
-          </Toolbar>
-        </AppBar>
         <Container maxWidth="md">
           <Home />
         </Container>
+        <footer className={classes.footer}>
+        <Container maxWidth="sm">
+          <Typography variant="body1">Github</Typography>
+          <Typography variant="body1">Docs</Typography>
+
+        </Container>
+      </footer>
       </div>
     </React.Fragment>
   );
