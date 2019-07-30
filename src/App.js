@@ -1,16 +1,12 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  AppBar,
-  Toolbar,
+
   Typography,
-  IconButton,
   Link,
   CssBaseline,
   Container
 } from "@material-ui/core";
-import { ImportExport } from "@material-ui/icons";
-import { GithubCircle } from "mdi-material-ui";
 import Home from "./Home";
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,15 +28,13 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1
   },
-  space:{
+  space: {
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1)
-
   },
   footer: {
     padding: theme.spacing(1),
     marginTop: "auto",
-    backgroundColor: "white",
     backgroundColor: "#f2f2f2",
     borderTop: "1px solid #e4e4e4",
     lineHeight: 40
@@ -58,6 +52,7 @@ export default function ButtonAppBar() {
     <React.Fragment>
       <CssBaseline />
       <div className={classes.root}>
+        <div className="sharethis-inline-share-buttons" style={{padding:10}} />
         <Container maxWidth="md">
           <Home />
         </Container>
@@ -65,17 +60,35 @@ export default function ButtonAppBar() {
           <Container maxWidth="sm">
             <div className={classes.flex}>
               <Typography variant="body2" className={classes.space}>
-                <Link color="textSecondary" href="https://github.com/contributionls/matters2ipfs">Github</Link>
+                <Link
+                  color="textSecondary"
+                  href="https://github.com/contributionls/matters2ipfs"
+                >
+                  Github
+                </Link>
               </Typography>
-              
+
               <Typography variant="body2" className={classes.space}>
-                <Link color="textSecondary" href="https://github.com/contributionls/matters2ipfs/blob/master/README.md#getting_started">Docs</Link>
+                <Link
+                  color="textSecondary"
+                  href="https://github.com/contributionls/matters2ipfs/blob/master/README.md#getting_started"
+                >
+                  Docs
+                </Link>
               </Typography>
-            <Typography variant="body2" className={classes.space}>
-              <Link color="textSecondary" href="https://github.com/contributionls/matters2ipfs/issues/new">Submit Gateway</Link>
-            </Typography>
               <Typography variant="body2" className={classes.space}>
-                <Link color="textSecondary" href="https://github.com/contributionls/matters2ipfs/blob/master/Terms.md">
+                <Link
+                  color="textSecondary"
+                  href="https://github.com/contributionls/matters2ipfs/issues/new"
+                >
+                  Submit Gateway
+                </Link>
+              </Typography>
+              <Typography variant="body2" className={classes.space}>
+                <Link
+                  color="textSecondary"
+                  href="https://github.com/contributionls/matters2ipfs/blob/master/Terms.md"
+                >
                   Terms of Use
                 </Link>
               </Typography>

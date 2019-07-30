@@ -3,19 +3,12 @@ import {
   Button,
   TextField,
   FormGroup,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
   Typography,
   Link,
-  Grid,
   List,
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  Avatar,
-  ListItemIcon,
   ListSubheader,
   ListItemAvatar,
   CircularProgress,
@@ -26,26 +19,12 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import {
-  FileFind,
-  CheckCircle,
-  ContentCopy,
-  Delete as DeleteIcon,
-  Folder as FolderIcon
-} from "mdi-material-ui";
+import { CheckCircle, ContentCopy } from "mdi-material-ui";
 import { HighlightOff, ImportExport, AccessTime } from "@material-ui/icons";
-import { getExtname, api, isValidUrl, getHash, getMattersHash } from "./utils";
+import { api, isValidUrl, getHash, getMattersHash } from "./utils";
 import SnackBarContentWrapper from "./components/SnackBarContent";
 import gateways from "./public-gateway";
 import "./Home.css";
-const HOST = process.env.REACT_APP_API_HOST
-  ? process.env.REACT_APP_API_HOST
-  : "";
-const MAIN_HOST = process.env.REACT_APP_MAIN_HOST
-  ? process.env.REACT_APP_MAIN_HOST
-  : "";
-const allowTypes = [".yaml", ".yml", ".json", ".ini"];
-
 const useStyles = makeStyles(theme => ({
   root: {
     paddingBottom: 30
@@ -116,19 +95,27 @@ const useStyles = makeStyles(theme => ({
   overAvatar: {
     minWidth: 0,
     paddingRight: theme.spacing(1)
+  },
+  subheader: {
+    top: "auto",
+    zIndex: "auto",
+    position: "static"
   }
 }));
-
+let resultId = 1;
 export default function Home() {
   const classes = useStyles();
-  const corsApi = "";
+  // get search params
+  const searchParams = new URLSearchParams(window.location.search);
+  const searchUrl = searchParams.get("url") || "";
+  const corsApi = searchParams.get("cors") || "";
   const [isLoading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
   const [mediaHash, setMediaHash] = useState("");
-  const [hash, setHash] = useState(
-    ""
-  );
+  const [hash, setHash] = useState("");
+  const [autoConvert, setAutoConvert] = useState(false);
   const [checkedStat, setCheckedStat] = useState({
+    id: resultId,
     count: 0,
     checkedCount: 0,
     onlineCount: 0,
@@ -162,68 +149,64 @@ export default function Home() {
           status: "checking"
         };
       }
+
       setCheckedMap(currentCheckedMap);
       const keys = Object.keys(currentCheckedMap);
-      setCheckedStat({
-        count: keys.length,
-        checkedCount: 0,
-        onlineCount: 0,
-        offlineCount: 0
+      setCheckedStat(prevCheckedStat => {
+        return {
+          count: keys.length,
+          checkedCount: 0,
+          onlineCount: 0,
+          offlineCount: 0
+        };
       });
-      setTimeout(()=>{
-        keys.forEach(key => {
-          const item = currentCheckedMap[key];
-          const start = Date.now()
-          api(item.requestUrl)
-            .then(data => {
-              // console.log('data',data);
-              const end = Date.now()
-              const spend = end - start;
-              setCheckedStat(prevCheckedStat => {
-                const currentCheckedStat = Object.assign({}, prevCheckedStat);
+      keys.forEach(key => {
+        const item = currentCheckedMap[key];
+        const start = Date.now();
+        const currentResultId = resultId;
+        api(item.requestUrl)
+          .then(() => {
+            const end = Date.now();
+            const spend = end - start;
+            setCheckedStat(prevCheckedStat => {
+              const currentCheckedStat = Object.assign({}, prevCheckedStat);
+              if (resultId === currentResultId) {
                 currentCheckedStat.checkedCount++;
                 currentCheckedStat.onlineCount++;
-                return currentCheckedStat;
-              });
-              setCheckedMap(prevCheckedMap => {
-                const checkedMapState = Object.assign({}, prevCheckedMap);
-                if (checkedMapState[key]) {
-                  checkedMapState[key].status = "online";
-                  checkedMapState[key].timeout = spend;
-                }
-                return checkedMapState;
-              });
-            })
-            .catch(e => {
-              console.log("e", e);
-              setCheckedStat(prevCheckedStat => {
-                const currentCheckedStat = Object.assign({}, prevCheckedStat);
+              }
+              return currentCheckedStat;
+            });
+            setCheckedMap(prevCheckedMap => {
+              const checkedMapState = Object.assign({}, prevCheckedMap);
+              if (checkedMapState[key] && resultId === currentResultId) {
+                checkedMapState[key].status = "online";
+                checkedMapState[key].timeout = spend;
+              }
+              return checkedMapState;
+            });
+          })
+          .catch(e => {
+            setCheckedStat(prevCheckedStat => {
+              const currentCheckedStat = Object.assign({}, prevCheckedStat);
+              if (resultId === currentResultId) {
                 currentCheckedStat.checkedCount++;
                 currentCheckedStat.offlineCount++;
-                return currentCheckedStat;
-              });
-              setCheckedMap(prevCheckedMap => {
-                const checkedMapState = Object.assign({}, prevCheckedMap);
-                if (checkedMapState[key]) {
-                  checkedMapState[key].status = "offline";
-                  checkedMapState[key].error = e.message || "Timeout!";
-                }
-                return checkedMapState;
-              });
+              }
+              return currentCheckedStat;
             });
-        });
-      },1)
-
+            setCheckedMap(prevCheckedMap => {
+              const checkedMapState = Object.assign({}, prevCheckedMap);
+              if (checkedMapState[key] && resultId === currentResultId) {
+                checkedMapState[key].status = "offline";
+                checkedMapState[key].error = e.message || "Timeout!";
+              }
+              return checkedMapState;
+            });
+          });
+      });
     }
   };
-  useEffect(() => {
-    if (!isInit) {
-      console.log("init");
-      setIsInit(true);
-      // handleChangeHash(hash);
-    } else {
-    }
-  });
+
 
   const handleChangeUrl = e => {
     const currentUrl = e.target.value;
@@ -264,8 +247,16 @@ export default function Home() {
       setOpenError(true);
       return;
     }
+    resultId++;
+
     // setloading
     setLoading(true);
+    setCheckedStat({
+      count: 0,
+      checkedCount: 0,
+      onlineCount: 0,
+      offlineCount: 0
+    });
     setCheckedMap({});
     // get hash
     try {
@@ -302,10 +293,27 @@ export default function Home() {
         value: newUrl
       }
     });
+    setAutoConvert(true);
   };
   const handleClickCopy = () => {
     setOpen(true);
   };
+  useEffect(() => {
+    if (!isInit) {
+      setIsInit(true);
+    }
+    if (!isInit && searchUrl) {
+      setAutoConvert(true);
+      handleChangeUrl({
+        target: {
+          value: searchUrl
+        }
+      });
+    } else if (isInit && autoConvert) {
+      setAutoConvert(false);
+      handleConvert();
+    }
+  });
   return (
     <div className={classes.root}>
       {/* Hero unit */}
@@ -387,7 +395,11 @@ export default function Home() {
             <List
               aria-labelledby="nested-list-subheader"
               subheader={
-                <ListSubheader component="div" id="nested-list-subheader">
+                <ListSubheader
+                  component="div"
+                  className={classes.subheader}
+                  id="nested-list-subheader"
+                >
                   {checkedStat.checkedCount}/{checkedStat.count} gateways,{" "}
                   {checkedStat.onlineCount} are online,{" "}
                   {checkedStat.offlineCount} are offline
@@ -433,7 +445,13 @@ export default function Home() {
                           {item.displayUrl}
                         </Link>
                       }
-                      secondary={item.status === "offline" ? item.error :(item.status === "online"?`${item.timeout}ms`:null) }
+                      secondary={
+                        item.status === "offline"
+                          ? item.error
+                          : item.status === "online"
+                          ? `${item.timeout}ms`
+                          : null
+                      }
                     />
                     <ListItemSecondaryAction>
                       <CopyToClipboard
