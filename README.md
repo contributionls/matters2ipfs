@@ -36,7 +36,7 @@ Convert online: <https://matters2ipfs.js.org>
 
 ## 🔗 Generate Automatically Checked Links <a name = "generate"></a>
 
-You can generate automatically checked links by splicing URLs. The URL rule is:
+You can directly copy the link generated in the last part of [the online page](<https://matters2ipfs.js.org> ), Or rou can also generate automatically checked links with splicing URLs by yourself. The URL rule is:
 
 ```bash
 https://matters2ipfs.js.org/?url={encodeURIComponent(mattersUrl)}
