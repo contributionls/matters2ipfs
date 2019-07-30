@@ -28,6 +28,9 @@ export const isValidUrl = string => {
   }
 };
 export const getHash = url => {
+  if(url.indexOf('matters.news')<0){
+    return ''
+  }
   const matchResult = url.match(/.+-(.+)/)
   if(matchResult && matchResult[1]){
     const hashResult = matchResult[1]

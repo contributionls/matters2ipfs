@@ -271,6 +271,12 @@ export default function Home() {
         const { dataHash } = mattersResult.article;
         setHash(dataHash);
         handleChangeHash(dataHash);
+      }else if(mattersResult &&
+        mattersResult.article === null){
+          setErrorMessage(
+            `Can't get the matters dataHash, this may cause by your matters url`
+          );
+          setOpenError(true);
       } else {
         setErrorMessage(
           `Can't get the matters dataHash, this may cause by our convert server error`
@@ -349,6 +355,10 @@ export default function Home() {
         <TextField
           id={`url`}
           required
+          autoFocus={true}
+          inputProps={{
+            autoComplete:"off"
+          }}
           label={`Matters Article Url`}
           type="url"
           placeholder="https://matters.news/@leungkaichihk/%E9%A6%99%E6%B8%AF%E7%AC%AC%E4%B8%80%E8%AA%B2-%E7%B0%A1%E4%BB%8B%E5%8F%8A%E7%9B%AE%E9%8C%84-zdpuB2J818r8yUSDeZ4vDARrnQ4ut3S2UYjALXHJ16jp25w4P"
