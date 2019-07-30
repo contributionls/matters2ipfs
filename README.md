@@ -31,6 +31,14 @@ Convert online: <https://matters2ipfs.js.org>
 3. Click `Convert` Button(**Note: The checked result is base on your local network, so if you use a proxy, the result will base on your proxy.**)
 4. Click `Copy` Icon which the  link is online(**Note: The checked result which is online shows that your current network can visit, but Wechat maybe ban the link, so you should test the link first at Wechat if you want to share  Wechat.**)
 
+## Generate Automatically Checked Links
+
+You can generate automatically checked links by splicing URLs. The URL rule is:
+
+```bash
+https://matters2ipfs.js.org/?url={encodeURIComponent(mattersUrl)}
+```
+
 ## ➕ Submit New Public Gateway <a name = "submit"></a>
 
 If you want submit a new public gateway, you can create a  [new issue](https://github.com/contributionls/matters2ipfs/issues/new) or [new pull request](https://github.com/contributionls/matters2ipfs/pulls). Here is the [public gateways config file](https://github.com/contributionls/matters2ipfs/blob/master/src/public-gateway.js)
