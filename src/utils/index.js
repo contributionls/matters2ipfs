@@ -1,13 +1,6 @@
-import { GraphQLClient } from "graphql-request";
-const endpoint = "https://cors-anywhere.herokuapp.com/https://server.matters.news/graphql";
-  const graphQLClient = new GraphQLClient(endpoint,{
-      headers:{
-          // origin:'https://matters.news',
-          // 'x-requested-with':'matters'
-      },
-      mode: 'cors',
- 
-});
+import axios from "axios";
+import publicCors from "../public-cors";
+
 export { api } from "./api";
 
 export function getExtname(filename) {
@@ -28,21 +21,26 @@ export const isValidUrl = string => {
   }
 };
 export const getHash = url => {
-  if(url.indexOf('matters.news')<0){
-    return ''
+  if (url.indexOf("matters.news") < 0) {
+    return "";
   }
-  const matchResult = url.match(/.+-(.+)/)
-  if(matchResult && matchResult[1]){
-    const hashResult = matchResult[1]
+  const matchResult = url.match(/.+-(.+)/);
+  if (matchResult && matchResult[1]) {
+    const hashResult = matchResult[1];
     // check is inclue hash
-    const hash = hashResult.split('#')[0]
-    return hash
-  }else{
-    return ''
+    const hash = hashResult.split("#")[0];
+    return hash;
+  } else {
+    return "";
   }
-}
-export const getMattersHash =async options => {
-  if(options && options.mediaHash){
+};
+export const getMattersHash = async options => {
+  if (options && options.mediaHash) {
+    // getRandom cors server
+    const corsIndex = options.corsIndex
+    const finalCorsIndex = (corsIndex>=0 && corsIndex<publicCors.length)?corsIndex:Math.floor(Math.random() * publicCors.length)
+    const theCorsApi = options.cors?{url:options.cors,needEncode:options.corsNeedEncode}:publicCors[finalCorsIndex];
+    const mattersEndpoint = "https://server.matters.news/graphql";
     const query = /* GraphQL */ `
     query {
       article(input: { mediaHash: "${options.mediaHash}" }) {
@@ -50,10 +48,23 @@ export const getMattersHash =async options => {
       }
     }
   `;
-  const data = await graphQLClient.request(query);
-  return data;
-  }else{
-    throw new Error(`Can't found mediaHash`)
+    const mattersUrl = `${mattersEndpoint}?query=${encodeURIComponent(query)}`;
+    let endpoint = `${theCorsApi.url}${mattersUrl}`;
+
+    if (theCorsApi.needEncode) {
+      endpoint = `${theCorsApi.url}${encodeURIComponent(mattersUrl)}`;
+    }
+    const config = Object.assign({
+    },options.config)
+    const data = await axios.get(endpoint,config);
+    if (data.status === 200 && data.data && data.data.data) {
+      return data.data.data;
+    } else {
+      throw new Error(
+        `Can't get data hash, this may cause by matters server change their api, please let me know.`
+      );
+    }
+  } else {
+    throw new Error(`Can't found mediaHash`);
   }
-  
-}
+};

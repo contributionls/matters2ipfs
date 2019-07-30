@@ -104,8 +104,8 @@ const useStyles = makeStyles(theme => ({
     position: "static"
   },
   inputRoot: {
-    marginTop:theme.spacing(2),
-    marginBottom:theme.spacing(4),
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(4),
     padding: "2px 4px",
     display: "flex",
     alignItems: "center"
@@ -129,7 +129,10 @@ export default function Home() {
   // get search params
   const searchParams = new URLSearchParams(window.location.search);
   const searchUrl = searchParams.get("url") || "";
-  const corsApi = searchParams.get("cors") || "";
+  const checkedCorsApi = searchParams.get("checked_cors") || "";
+  const mattersCors = searchParams.get("cors") || "";
+  const mattersCorsNeedEncode = searchParams.get("cors_need_encode") || 0;
+  const mattersCorsIndex = searchParams.get("cors_index") || null;
   const [isLoading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
   const [mediaHash, setMediaHash] = useState("");
@@ -161,7 +164,7 @@ export default function Home() {
         const gateway = gateways[i];
         const gatewayAndHash = gateway.replace(":hash", currentHash);
         // opt-out from gateway redirects done by browser extension
-        const corsHost = corsApi;
+        const corsHost = checkedCorsApi;
         const displayUrl = corsHost + gatewayAndHash;
         const requestUrl = displayUrl + "#x-ipfs-companion-no-redirect";
         currentCheckedMap[displayUrl] = {
@@ -280,9 +283,18 @@ export default function Home() {
     setCheckedMap({});
     // get hash
     try {
-      const mattersResult = await getMattersHash({
+      const mattersParams = {
         mediaHash: mediaHash
-      });
+      };
+      if (mattersCors) {
+        mattersParams.cors = mattersCors;
+        if (mattersCorsNeedEncode === "1") {
+          mattersParams.corsNeedEncode = true;
+        }
+      } else if (mattersCorsIndex!==null) {
+        mattersParams.corsIndex = Number(mattersCorsIndex);
+      }
+      const mattersResult = await getMattersHash(mattersParams);
       if (
         mattersResult &&
         mattersResult.article &&
@@ -501,7 +513,8 @@ export default function Home() {
             </List>
             <Divider className={classes.divider} />
             <Typography variant="h5" component="h3">
-              Want a link that automatically checks the IPFS address of the article?
+              Want a link that automatically checks the IPFS address of the
+              article?
             </Typography>
             <Paper className={classes.inputRoot}>
               <InputBase
@@ -510,21 +523,17 @@ export default function Home() {
                 placeholder="Search Google Maps"
                 inputProps={{ "aria-label": "search google maps" }}
               />
-              <IconButton
-                className={classes.iconButton}
-                aria-label="copy"
-              >
+              <IconButton className={classes.iconButton} aria-label="copy">
                 <CopyToClipboard
                   text={currentPageAutoLink}
                   onCopy={handleClickCopy}
                 >
-                    <ContentCopy  />
+                  <ContentCopy />
                 </CopyToClipboard>
               </IconButton>
             </Paper>
           </div>
         ) : null}
-
       </FormGroup>
       <Snackbar
         anchorOrigin={{

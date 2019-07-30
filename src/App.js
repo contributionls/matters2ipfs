@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     marginLeft: theme.spacing(1)
   },
-  footer: {
+  footer: {  
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(2),
     marginTop: "auto",
@@ -42,6 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
   flex: {
     display: "flex",
+    flexWrap:'wrap',
     justifyContent: "center"
   }
 }));
@@ -58,7 +59,7 @@ export default function ButtonAppBar() {
           <Home />
         </Container>
         <footer className={classes.footer}>
-          <Container maxWidth="sm">
+          <Container maxWidth="md">
             <div className={classes.flex}>
               <Typography variant="body2" className={classes.space}>
                 <Link
@@ -80,9 +81,9 @@ export default function ButtonAppBar() {
               <Typography variant="body2" className={classes.space}>
                 <Link
                   color="textSecondary"
-                  href="https://github.com/contributionls/matters2ipfs/issues/new"
+                  href="https://github.com/contributionls/matters2ipfs/issues"
                 >
-                  Submit Gateway
+                  Feedback
                 </Link>
               </Typography>
               <Typography variant="body2" className={classes.space}>
@@ -94,11 +95,19 @@ export default function ButtonAppBar() {
                 </Link>
               </Typography>
               <Typography variant="body2" className={classes.space}>
+                <Link
+                  color="textSecondary"
+                  href="https://github.com/contributionls/matters2ipfs/issues/new"
+                >
+                  Submit Gateway
+                </Link>
+              </Typography>
+              <Typography variant="body2" className={classes.space}>
               <Link
                 color="textSecondary"
                 href="https://matters.news/@deserve"
               >
-                Follow
+                Follow Me
               </Link>
             </Typography>
             </div>

@@ -20,7 +20,7 @@ stop:
 build:
 	docker build -f DEV.Dockerfile -t ${CLIENT_DEV_LATEST} . && Docker run -v `pwd`/build:/app/build ${CLIENT_DEV_LATEST} yarn build
 deploy:
-	make build && ./scripts/deploy.sh
+	export NODE_TLS_REJECT_UNAUTHORIZED='0' && make test && make build && ./scripts/deploy.sh
 test:
 	docker build -f DEV.Dockerfile -t ${CLIENT_DEV_LATEST} . && Docker run ${CLIENT_DEV_LATEST} yarn test:ci
 client:
