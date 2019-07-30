@@ -13,9 +13,11 @@ import {
   ListItemAvatar,
   CircularProgress,
   IconButton,
+  InputBase,
   Divider,
   Snackbar,
-  Container
+  Container,
+  Paper
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -100,6 +102,25 @@ const useStyles = makeStyles(theme => ({
     top: "auto",
     zIndex: "auto",
     position: "static"
+  },
+  inputRoot: {
+    marginTop:theme.spacing(2),
+    marginBottom:theme.spacing(4),
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center"
+  },
+  input: {
+    marginLeft: 8,
+    flex: 1
+  },
+  iconButton: {
+    padding: 10
+  },
+  inputDivider: {
+    width: 1,
+    height: 28,
+    margin: 4
   }
 }));
 let resultId = 1;
@@ -207,7 +228,6 @@ export default function Home() {
     }
   };
 
-
   const handleChangeUrl = e => {
     const currentUrl = e.target.value;
     const isUrlError = getUrlError(currentUrl);
@@ -271,12 +291,11 @@ export default function Home() {
         const { dataHash } = mattersResult.article;
         setHash(dataHash);
         handleChangeHash(dataHash);
-      }else if(mattersResult &&
-        mattersResult.article === null){
-          setErrorMessage(
-            `Can't get the matters dataHash, this may cause by your matters url`
-          );
-          setOpenError(true);
+      } else if (mattersResult && mattersResult.article === null) {
+        setErrorMessage(
+          `Can't get the matters dataHash, this may cause by your matters url`
+        );
+        setOpenError(true);
       } else {
         setErrorMessage(
           `Can't get the matters dataHash, this may cause by our convert server error`
@@ -320,6 +339,9 @@ export default function Home() {
       handleConvert();
     }
   });
+  const currentPageAutoLink = `${window.location.protocol}//${
+    window.location.host
+  }/?url=${encodeURIComponent(url)}`;
   return (
     <div className={classes.root}>
       {/* Hero unit */}
@@ -357,7 +379,7 @@ export default function Home() {
           required
           autoFocus={true}
           inputProps={{
-            autoComplete:"off"
+            autoComplete: "off"
           }}
           label={`Matters Article Url`}
           type="url"
@@ -477,8 +499,32 @@ export default function Home() {
                 );
               })}
             </List>
+            <Divider className={classes.divider} />
+            <Typography variant="h5" component="h3">
+              Want a link that automatically checks the IPFS address of the article?
+            </Typography>
+            <Paper className={classes.inputRoot}>
+              <InputBase
+                value={currentPageAutoLink}
+                className={classes.input}
+                placeholder="Search Google Maps"
+                inputProps={{ "aria-label": "search google maps" }}
+              />
+              <IconButton
+                className={classes.iconButton}
+                aria-label="copy"
+              >
+                <CopyToClipboard
+                  text={currentPageAutoLink}
+                  onCopy={handleClickCopy}
+                >
+                    <ContentCopy  />
+                </CopyToClipboard>
+              </IconButton>
+            </Paper>
           </div>
         ) : null}
+
       </FormGroup>
       <Snackbar
         anchorOrigin={{
