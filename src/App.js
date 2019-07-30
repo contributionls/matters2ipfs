@@ -33,7 +33,8 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1)
   },
   footer: {
-    padding: theme.spacing(1),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
     marginTop: "auto",
     backgroundColor: "#f2f2f2",
     borderTop: "1px solid #e4e4e4",
@@ -92,6 +93,14 @@ export default function ButtonAppBar() {
                   Terms of Use
                 </Link>
               </Typography>
+              <Typography variant="body2" className={classes.space}>
+              <Link
+                color="textSecondary"
+                href="https://matters.news/@deserve"
+              >
+                Follow
+              </Link>
+            </Typography>
             </div>
           </Container>
         </footer>
