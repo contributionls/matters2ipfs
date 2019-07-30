@@ -19,6 +19,7 @@ Convert online: <https://matters2ipfs.js.org>
 
 - [Getting Started](#getting_started)
 - [Submit New Public Gateway](#submit)
+- [Generate Automatically Checked Links](#generate)
 - [Built Using](#built_using)
 - [TODO](TODO.md)
 - [Contributing](CONTRIBUTING.md)
@@ -31,7 +32,7 @@ Convert online: <https://matters2ipfs.js.org>
 3. Click `Convert` Button(**Note: The checked result is base on your local network, so if you use a proxy, the result will base on your proxy.**)
 4. Click `Copy` Icon which the  link is online(**Note: The checked result which is online shows that your current network can visit, but Wechat maybe ban the link, so you should test the link first at Wechat if you want to share  Wechat.**)
 
-## Generate Automatically Checked Links
+## 🔗 Generate Automatically Checked Links <a name = "generate"></a>
 
 You can generate automatically checked links by splicing URLs. The URL rule is:
 
