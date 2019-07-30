@@ -15,6 +15,8 @@ The tool converts [matters](https://matters.news) URL to [ipfs](https://ipfs.io/
 
 Convert online: <https://matters2ipfs.js.org>
 
+![screen](docs/assets/matters2ipfs.gif)
+
 ## 📝 Table of Contents
 
 - [Getting Started](#getting_started)
