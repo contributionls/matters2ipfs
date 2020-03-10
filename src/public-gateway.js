@@ -1,28 +1,32 @@
 export default [
   "https://ninetailed.ninja/ipfs/:hash",
+  "https://ipfs.eternum.io/ipfs/:hash",
+  "https://hardbin.com/ipfs/:hash",
+  "https://gateway.pinata.cloud/ipfs/:hash",
   "https://siderus.io/ipfs/:hash",
+  "https://ipfstube.erindachtler.me/ipfs/:hash",
+  "https://ipfs.io/ipfs/:hash",
+  "https://gateway.ipfs.io/ipfs/:hash",
+  "https://ipfs.infura.io/ipfs/:hash",
+
+  "https://ipfs.privacytools.io/ipfs/:hash",
+  "https://d26g9c7mfuzstv.cloudfront.net/ipfs/:hash",
   "https://eu.siderus.io/ipfs/:hash",
   "https://na.siderus.io/ipfs/:hash",
   "https://ap.siderus.io/ipfs/:hash",
-  "https://ipfs.eternum.io/ipfs/:hash",
-  "https://hardbin.com/ipfs/:hash",
+
   "https://ipfs.wa.hle.rs/ipfs/:hash",
-  "https://gateway.pinata.cloud/ipfs/:hash",
   "https://ipfs.sloppyta.co/ipfs/:hash",
   "https://ipfs.busy.org/ipfs/:hash",
   "https://ipfs.greyh.at/ipfs/:hash",
   "https://gateway.serph.network/ipfs/:hash",
   "https://ipfs.fooock.com/ipfs/:hash",
-  "https://ipfstube.erindachtler.me/ipfs/:hash",
   "https://cdn.cwinfo.net/ipfs/:hash",
-  "https://ipfs.privacytools.io/ipfs/:hash",
-  "https://d26g9c7mfuzstv.cloudfront.net/ipfs/:hash",
+
   "https://gateway.temporal.cloud/ipfs/:hash",
   "https://ipfs.jes.xxx/ipfs/:hash",
   "https://cloudflare-ipfs.com/ipfs/:hash",
-  "https://ipfs.io/ipfs/:hash",
-  "https://gateway.ipfs.io/ipfs/:hash",
-  "https://ipfs.infura.io/ipfs/:hash",
+
   "https://upload.global/ipfs/:hash",
   "https://catalunya.network/ipfs/:hash",
   "https://ipfs.works/ipfs/:hash",
@@ -39,5 +43,5 @@ export default [
   "https://ipfs.globalupload.io/ipfs/:hash",
   "https://ipfs.renehsz.com/ipfs/:hash",
   "https://gateway.blocksec.com/ipfs/:hash",
-  "https://jorropo.ovh/ipfs/:hash",
+  "https://jorropo.ovh/ipfs/:hash"
 ];

@@ -1,5 +1,6 @@
 import axios from "axios";
 import publicCors from "../public-cors";
+import Route from "route-parser";
 
 export { api } from "./api";
 
@@ -24,12 +25,19 @@ export const getHash = url => {
   if (url.indexOf("matters.news") < 0) {
     return "";
   }
-  const matchResult = url.match(/.+-(.+)/);
-  if (matchResult && matchResult[1]) {
-    const hashResult = matchResult[1];
-    // check is inclue hash
-    const hash = hashResult.split("#")[0];
-    return hash;
+  const urlObj = new URL(url);
+  const detailRoute = new Route("/@:author/:id");
+  const routeMatchResult = detailRoute.match(urlObj.pathname);
+  if (routeMatchResult && routeMatchResult.id) {
+    const matchResult = routeMatchResult.id.match(/.+-(.+)/);
+    if (matchResult && matchResult[1]) {
+      const hashResult = matchResult[1];
+      // check is inclue hash
+      const hash = hashResult.split("#")[0];
+      return hash;
+    } else {
+      return "";
+    }
   } else {
     return "";
   }
@@ -37,9 +45,14 @@ export const getHash = url => {
 export const getMattersHash = async options => {
   if (options && options.mediaHash) {
     // getRandom cors server
-    const corsIndex = options.corsIndex
-    const finalCorsIndex = (corsIndex>=0 && corsIndex<publicCors.length)?corsIndex:Math.floor(Math.random() * publicCors.length)
-    const theCorsApi = options.cors?{url:options.cors,needEncode:options.corsNeedEncode}:publicCors[finalCorsIndex];
+    const corsIndex = options.corsIndex;
+    const finalCorsIndex =
+      corsIndex >= 0 && corsIndex < publicCors.length
+        ? corsIndex
+        : Math.floor(Math.random() * publicCors.length);
+    const theCorsApi = options.cors
+      ? { url: options.cors, needEncode: options.corsNeedEncode }
+      : publicCors[finalCorsIndex];
     const mattersEndpoint = "https://server.matters.news/graphql";
     const query = /* GraphQL */ `
     query {
@@ -54,9 +67,8 @@ export const getMattersHash = async options => {
     if (theCorsApi.needEncode) {
       endpoint = `${theCorsApi.url}${encodeURIComponent(mattersUrl)}`;
     }
-    const config = Object.assign({
-    },options.config)
-    const data = await axios.get(endpoint,config);
+    const config = Object.assign({}, options.config);
+    const data = await axios.get(endpoint, config);
     if (data.status === 200 && data.data && data.data.data) {
       return data.data.data;
     } else {

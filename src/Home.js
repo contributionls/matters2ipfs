@@ -291,7 +291,7 @@ export default function Home() {
         if (mattersCorsNeedEncode === "1") {
           mattersParams.corsNeedEncode = true;
         }
-      } else if (mattersCorsIndex!==null) {
+      } else if (mattersCorsIndex !== null) {
         mattersParams.corsIndex = Number(mattersCorsIndex);
       }
       const mattersResult = await getMattersHash(mattersParams);
@@ -350,7 +350,15 @@ export default function Home() {
       setAutoConvert(false);
       handleConvert();
     }
-  });
+  }, [
+    isInit,
+    searchUrl,
+    autoConvert,
+    setIsInit,
+    setAutoConvert,
+    handleChangeUrl,
+    handleConvert
+  ]);
   const currentPageAutoLink = `${window.location.protocol}//${
     window.location.host
   }/?url=${encodeURIComponent(url)}`;

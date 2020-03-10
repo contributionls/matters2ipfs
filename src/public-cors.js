@@ -5,9 +5,9 @@ export default [
   {
     url: "https://cors-anywhere.herokuapp.com/"
   }, // 2.79s, too many use, may be slowly
-//   {
-//     url: "https://thingproxy.freeboard.io/fetch/"
-//   }, // 2.98s can't use at production, 401 when matters2ipfs.js.org
+  //   {
+  //     url: "https://thingproxy.freeboard.io/fetch/"
+  //   }, // 2.98s can't use at production, 401 when matters2ipfs.js.org
   {
     url: "https://api.allorigins.win/raw?url=",
     needEncode: true
